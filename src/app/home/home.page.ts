@@ -14,6 +14,7 @@ export class HomePage implements OnInit  {
   users = [];
   joke = null;
   appIsOnline = true;
+  eventos: any = [];
 
   constructor( private http: HttpClient ) {}
 
@@ -39,6 +40,13 @@ export class HomePage implements OnInit  {
     this.http.get('https://api.chucknorris.io/jokes/random').subscribe(result => {
       console.log('joke result: ', result);
       this.joke = result;
+    });
+  }
+
+  getEventos() {
+    this.http.get('http://h2522373.stratoserver.net:1337/eventos').subscribe(result => {
+      console.log('getEventos', result);
+      this.eventos = result;
     });
   }
 }

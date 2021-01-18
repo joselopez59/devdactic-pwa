@@ -9,7 +9,7 @@
 <ion-content>
   <ion-button expand="block" (click)="getData()">Get Data</ion-button>
   <ion-button expand="block" (click)="getOnlineData()">Get Online Data</ion-button>
- 
+  <ion-button expand="block" (click)="getEventos()">Get Eventos</ion-button>
   <ion-card *ngIf="joke">
     <ion-card-content>
       {{ joke.value }}
@@ -24,6 +24,16 @@
       <ion-label>
         <h2 class="ion-text-capitalize">{{ user.name.first }} {{ user.name.last }}</h2>
         <p>{{ user.email }}</p>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item *ngFor="let evento of eventos">
+      
+      <ion-label>
+        <h2 class="ion-text-capitalize">{{ evento.title }}</h2>
+       
       </ion-label>
     </ion-item>
   </ion-list>
