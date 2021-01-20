@@ -1,22 +1,41 @@
-import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Apollo, QueryRef } from 'apollo-angular';
+import gql from 'graphql-tag';
+
 import { Plugins } from '@capacitor/core';
 
 const { Network } = Plugins;
 
+const OFERTAS_QUERY = gql`
+    query {
+      ofertas {
+        nombre
+        imagen {
+          id
+          url
+        }
+      }
+    }
+  `;
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage implements OnInit  {
+
+export class HomePage implements OnInit {
 
   users = [];
   joke = null;
   appIsOnline = true;
-  eventos: any = [];
+  ofertas: any[] = [];
+  private query: QueryRef<any>;
 
-  constructor( private http: HttpClient ) {}
+  constructor(
+    private http: HttpClient,
+    private apollo: Apollo
+  ) { }
 
   async ngOnInit() {
     const status = await Network.getStatus();
@@ -26,6 +45,7 @@ export class HomePage implements OnInit  {
     Network.addListener('networkStatusChange', (status) => {
       this.appIsOnline = status.connected;
     });
+
   }
 
   getData() {
@@ -43,10 +63,31 @@ export class HomePage implements OnInit  {
     });
   }
 
-  getEventos() {
-    this.http.get('http://h2522373.stratoserver.net:1337/eventos').subscribe(result => {
-      console.log('getEventos', result);
-      this.eventos = result;
+  getOfertas() {
+
+    this.query = this.apollo.watchQuery({
+      query: OFERTAS_QUERY,
+      variables: {}
     });
+
+    this.query.valueChanges.subscribe(result => {
+      this.ofertas = result.data && result.data.ofertas;
+      console.log('result', result.data);
+      console.log('getOfertas', this.ofertas);
+    });
+
+    // this.apollo.watchQuery({
+    //   query: this.OFERTAS_QUERY
+    // }).valueChanges.subscribe((response) => {
+    //   this.ofertas = response.data;
+    //   console.log('data', response);
+    //   console.log('getOfertas', this.ofertas);
+    // });
   }
+  // getEventos() {
+  //   this.http.get('http://h2522373.stratoserver.net:1337/eventos').subscribe(result => {
+  //     console.log('getEventos', result);
+  //     this.eventos = result;
+  //   });
+  // }
 }

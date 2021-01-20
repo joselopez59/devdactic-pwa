@@ -9,7 +9,7 @@
 <ion-content>
   <ion-button expand="block" (click)="getData()">Get Data</ion-button>
   <ion-button expand="block" (click)="getOnlineData()">Get Online Data</ion-button>
-  <ion-button expand="block" (click)="getEventos()">Get Eventos</ion-button>
+  <ion-button expand="block" (click)="getOfertas()">Get Ofertas</ion-button>
   <ion-card *ngIf="joke">
     <ion-card-content>
       {{ joke.value }}
@@ -29,11 +29,12 @@
   </ion-list>
 
   <ion-list>
-    <ion-item *ngFor="let evento of eventos">
+    <ion-item *ngFor="let oferta of ofertas">
       
       <ion-label>
-        <h2 class="ion-text-capitalize">{{ evento.title }}</h2>
-       
+        <h2 class="ion-text-capitalize">{{ oferta.nombre }}</h2>
+        <p>{{oferta.imagen.url}}</p>
+        <img src="{{oferta.imagen.url}}">
       </ion-label>
     </ion-item>
   </ion-list>
