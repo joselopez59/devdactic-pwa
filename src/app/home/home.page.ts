@@ -18,6 +18,19 @@ const OFERTAS_QUERY = gql`
       }
     }
   `;
+
+const OFERTA_ID_QUERY = gql`
+    query {
+      ofertas {
+        nombre
+        imagen {
+          id
+          url
+        }
+      }
+    }
+  `;
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -30,7 +43,11 @@ export class HomePage implements OnInit {
   joke = null;
   appIsOnline = true;
   ofertas: any[] = [];
+  eventos: any[] = [];
+  evento: any = '';
+
   private query: QueryRef<any>;
+  private queryOferta: QueryRef<any>;
 
   constructor(
     private http: HttpClient,
@@ -45,7 +62,6 @@ export class HomePage implements OnInit {
     Network.addListener('networkStatusChange', (status) => {
       this.appIsOnline = status.connected;
     });
-
   }
 
   getData() {
@@ -63,31 +79,103 @@ export class HomePage implements OnInit {
     });
   }
 
+
+  getEventos() {
+
+    const eventosQuery: QueryRef<any> = this.apollo.watchQuery({
+      query: gql`
+        query {
+          eventos {
+            id
+            titulo
+            descripcion
+            fecha
+          }
+        }
+      `
+    });
+
+    eventosQuery.valueChanges.subscribe(result => {
+      this.eventos = result.data && result.data.eventos;
+      // console.log('result.data)', result.data);
+      // console.log('result.data.eventos)', result.data.eventos);
+      // console.log('getEventos', this.eventos);
+    });
+  }
+
+
+  displayEvento(id: string) {
+
+    console.log('displayEvento id', id);
+
+    const eventoQuery: QueryRef<any> = this.apollo.watchQuery({
+      query: gql`
+      query ($ide: ID!)
+      {
+        evento(where: {id: $ide} ) {
+          id
+          titulo
+        }
+      }
+      `,
+      variables: {
+        ide: id
+      }
+    });
+
+    eventoQuery.valueChanges.subscribe(result => {
+      // this.evento = result.data && result.data.eventos;
+      console.log('result.data)', result.data.evento);
+      // console.log('result.data.eventos)', result.data.eventos);
+      // console.log('getEventos', this.eventos);
+    });
+  }
+
   getOfertas() {
 
     this.query = this.apollo.watchQuery({
-      query: OFERTAS_QUERY,
+      query: gql`
+        query {
+          ofertas {
+            nombre
+            imagen {
+              id
+              url
+            }
+          }
+        }
+      `,
       variables: {}
     });
 
     this.query.valueChanges.subscribe(result => {
       this.ofertas = result.data && result.data.ofertas;
-      console.log('result', result.data);
-      console.log('getOfertas', this.ofertas);
+      // console.log('result', result.data);
+      // console.log('getOfertas', this.ofertas);
+    });
+  }
+
+  getOferta() {
+    this.queryOferta = this.apollo.watchQuery({
+      query: gql`
+      query ($ide: ID!)
+      {
+        evento(where: {id: $ide} ) {
+          id
+          titulo
+        }
+      }
+      `,
+      variables: {
+        ide: 'ckk5bps0gbbjv0906xb6vz7fk'
+      }
     });
 
-    // this.apollo.watchQuery({
-    //   query: this.OFERTAS_QUERY
-    // }).valueChanges.subscribe((response) => {
-    //   this.ofertas = response.data;
-    //   console.log('data', response);
-    //   console.log('getOfertas', this.ofertas);
-    // });
+    this.queryOferta.valueChanges.subscribe(result => {
+      // this.ofertas = result.data && result.data.ofertas;
+      console.log('result', result.data);
+      // console.log('getOfertas', this.ofertas);
+    });
   }
-  // getEventos() {
-  //   this.http.get('http://h2522373.stratoserver.net:1337/eventos').subscribe(result => {
-  //     console.log('getEventos', result);
-  //     this.eventos = result;
-  //   });
-  // }
+
 }
