@@ -37,12 +37,14 @@
     >
      
       <ion-label>
-        <h2 class="ion-text-capitalize">{{ evento.titulo }}</h2>    
+        <h2 class="ion-text-capitalize">{{ evento.title }}</h2>    
       </ion-label>
+      {{ evento.startTime }}
+      {{ evento.endTime }}
     </ion-item>
   </ion-list>
 
-  <!-- <ion-list>
+  <ion-list>
     <ion-item *ngFor="let oferta of ofertas">
       
       <ion-label>
@@ -51,7 +53,7 @@
         <img src="{{oferta.imagen.url}}">
       </ion-label>
     </ion-item>
-  </ion-list> -->
+  </ion-list>
  
 </ion-content>
  

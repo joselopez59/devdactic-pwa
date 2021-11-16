@@ -82,14 +82,16 @@ export class HomePage implements OnInit {
 
   getEventos() {
 
+    console.log('getEventos');
     const eventosQuery: QueryRef<any> = this.apollo.watchQuery({
       query: gql`
         query {
           eventos {
             id
-            titulo
-            descripcion
-            fecha
+            title
+            descr
+            startTime
+            endTime
           }
         }
       `
@@ -97,9 +99,9 @@ export class HomePage implements OnInit {
 
     eventosQuery.valueChanges.subscribe(result => {
       this.eventos = result.data && result.data.eventos;
-      // console.log('result.data)', result.data);
+      console.log('result.data)', result.data);
       // console.log('result.data.eventos)', result.data.eventos);
-      // console.log('getEventos', this.eventos);
+      console.log('getEventos', this.eventos);
     });
   }
 
@@ -151,7 +153,7 @@ export class HomePage implements OnInit {
     this.query.valueChanges.subscribe(result => {
       this.ofertas = result.data && result.data.ofertas;
       // console.log('result', result.data);
-      // console.log('getOfertas', this.ofertas);
+      console.log('getOfertas', this.ofertas);
     });
   }
 
